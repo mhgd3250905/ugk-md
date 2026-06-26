@@ -40,7 +40,8 @@
       "dist/**/*",
       "main.js",
       "preload.cjs",
-      "package.json"
+      "package.json",
+      "src/i18n.js"
     ],
     "directories": {
       "output": "release"

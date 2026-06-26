@@ -1,10 +1,12 @@
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from 'electron'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { defaultLanguage, languages, normalizeLanguage } from './src/i18n.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 let win
+let currentLanguage = defaultLanguage
 let pendingFile = firstMarkdownArg(process.argv)
 
 if (process.env.UGK_MD_DEBUG_PORT) {
@@ -32,6 +34,8 @@ app.on('open-file', (event, filePath) => {
 app.whenReady().then(createWindow)
 
 async function createWindow() {
+  createMenu()
+
   win = new BrowserWindow({
     width: 1100,
     height: 760,
@@ -89,6 +93,12 @@ ipcMain.handle('read-file', (_event, filePath) => {
   return readMarkdown(filePath)
 })
 
+ipcMain.handle('set-language', (_event, language) => {
+  currentLanguage = normalizeLanguage(language)
+  createMenu()
+  return currentLanguage
+})
+
 async function openMarkdown(filePath) {
   if (!win) return
   try {
@@ -106,6 +116,48 @@ async function readMarkdown(filePath) {
     name: path.basename(filePath),
     baseUrl: pathToFileURL(path.dirname(filePath) + path.sep).href,
   }
+}
+
+function createMenu() {
+  const template = [
+    ...(process.platform === 'darwin' ? [{ role: 'appMenu' }] : []),
+    {
+      label: 'File',
+      submenu: [
+        { role: 'close' },
+        { type: 'separator' },
+        { role: 'quit' },
+      ],
+    },
+    {
+      label: 'Language',
+      submenu: Object.entries(languages).map(([id, language]) => ({
+        label: language.label,
+        type: 'radio',
+        checked: id === currentLanguage,
+        click: () => selectLanguage(id),
+      })),
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+      ],
+    },
+  ]
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+}
+
+function selectLanguage(language) {
+  currentLanguage = normalizeLanguage(language)
+  createMenu()
+  win?.webContents.send('language-selected', currentLanguage)
 }
 
 function firstMarkdownArg(argv) {

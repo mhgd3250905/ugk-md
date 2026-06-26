@@ -4,12 +4,13 @@ UGK Markdown is a local Markdown reader for macOS and Windows. It opens local `.
 
 ## Features
 
-- Local Markdown file opening and file association support
+- Local Markdown file opening, drag-and-drop empty state, and file association support
 - GFM tables, task lists, strikethrough, line breaks, emoji, frontmatter
 - Syntax highlighting, KaTeX math, Mermaid diagrams, image zoom
 - Reader mode and source/preview compare mode
 - Editable source pane with live rendered preview
 - Light and dark themes
+- Native Language menu with English, Chinese, Japanese, Korean, Spanish, French, German, Portuguese, and Russian UI strings
 - External links open in the system browser
 
 ## Development

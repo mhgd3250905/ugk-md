@@ -7,6 +7,7 @@ import highlight from '@bytemd/plugin-highlight'
 import math from '@bytemd/plugin-math'
 import mediumZoom from '@bytemd/plugin-medium-zoom'
 import mermaid from '@bytemd/plugin-mermaid'
+import { languages, normalizeLanguage, t } from './i18n.js'
 import 'bytemd/dist/index.css'
 import 'highlight.js/styles/github.css'
 import 'katex/dist/katex.css'
@@ -22,18 +23,25 @@ const plugins = [
   mediumZoom(),
   gemoji(),
 ]
+const app = document.querySelector('#app')
 const viewerTarget = document.querySelector('#viewer')
 const empty = document.querySelector('#empty')
+const reader = document.querySelector('#reader')
 const fileLabel = document.querySelector('#file')
 const base = document.querySelector('#markdown-base')
 const source = document.querySelector('#source')
 const openButton = document.querySelector('#open')
 const compareButton = document.querySelector('#compare')
 const themeButton = document.querySelector('#theme')
+let currentFile = null
+let language = normalizeLanguage(localStorage.getItem('ugkMarkdownLanguage') || navigator.language)
 const viewer = new Viewer({
   target: viewerTarget,
   props: { value: '', plugins },
 })
+
+setLanguage(language)
+window.ugkMarkdown.setLanguage(language)
 
 openButton.addEventListener('click', async () => {
   const file = await window.ugkMarkdown.openDialog()
@@ -106,26 +114,54 @@ viewerTarget.addEventListener('click', (event) => {
 })
 
 window.ugkMarkdown.onFileOpened(show)
+window.ugkMarkdown.onLanguageSelected(setLanguage)
 
 function show(file) {
+  currentFile = file
   base.href = file.baseUrl
   fileLabel.textContent = file.path
   source.value = file.value
   document.title = `${file.name} - UGK Markdown`
   empty.hidden = true
+  reader.hidden = false
+  compareButton.disabled = false
   viewer.$set({ value: file.value })
 }
 
+function setLanguage(next) {
+  language = normalizeLanguage(next)
+  localStorage.setItem('ugkMarkdownLanguage', language)
+  document.documentElement.lang = languages[language].locale
+
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    if (element === fileLabel && currentFile) return
+    element.textContent = t(language, element.dataset.i18n)
+  })
+
+  document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+    element.setAttribute('aria-label', t(language, element.dataset.i18nAriaLabel))
+  })
+
+  app.dataset.dropLabel = t(language, 'drop.label')
+  refreshModeLabels()
+}
+
 function toggleTheme() {
-  const dark = document.body.classList.toggle('dark')
-  themeButton.textContent = dark ? 'Light' : 'Dark'
-  themeButton.setAttribute('aria-pressed', String(dark))
+  document.body.classList.toggle('dark')
+  themeButton.setAttribute('aria-pressed', String(document.body.classList.contains('dark')))
+  refreshModeLabels()
 }
 
 function toggleCompare() {
-  const compare = document.body.classList.toggle('compare')
-  compareButton.textContent = compare ? 'Reader' : 'Compare'
-  compareButton.setAttribute('aria-pressed', String(compare))
+  if (!currentFile) return
+  document.body.classList.toggle('compare')
+  compareButton.setAttribute('aria-pressed', String(document.body.classList.contains('compare')))
+  refreshModeLabels()
+}
+
+function refreshModeLabels() {
+  themeButton.textContent = t(language, document.body.classList.contains('dark') ? 'theme.light' : 'theme.dark')
+  compareButton.textContent = t(language, document.body.classList.contains('compare') ? 'compare.reader' : 'compare.compare')
 }
 
 function scrollToHash(hash) {

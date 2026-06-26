@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
-const files = ['main.js', 'preload.cjs', 'index.html', 'src/renderer.js', 'src/styles.css']
+const files = ['main.js', 'preload.cjs', 'index.html', 'src/renderer.js', 'src/styles.css', 'src/i18n.js']
 
 for (const file of files) {
   if (!fs.existsSync(file)) throw new Error(`Missing ${file}`)
@@ -11,27 +11,52 @@ const exts = pkg.build.fileAssociations[0].ext
 for (const ext of ['md', 'markdown']) {
   if (!exts.includes(ext)) throw new Error(`Missing file association for .${ext}`)
 }
+if (!pkg.build.files.includes('src/i18n.js')) throw new Error('Packaged app must include shared i18n module')
 
 const preload = fs.readFileSync('preload.cjs', 'utf8')
 if (preload.includes('import ')) throw new Error('preload must stay CommonJS for Electron sandbox')
 if (!preload.includes('openExternal')) throw new Error('Missing external link bridge')
 if (!preload.includes('pathForFile')) throw new Error('Missing drag/drop file path bridge')
+if (!preload.includes('setLanguage')) throw new Error('Missing language menu bridge')
+if (!preload.includes('onLanguageSelected')) throw new Error('Missing language menu listener')
 
 const main = fs.readFileSync('main.js', 'utf8')
 if (!main.includes('will-navigate')) throw new Error('Missing navigation guard')
 if (!main.includes('Only Markdown files can be opened')) throw new Error('Missing drag/drop read guard')
+if (!main.includes('Menu.buildFromTemplate')) throw new Error('Missing native app menu')
+if (!main.includes("label: 'Language'")) throw new Error('Missing Language menu')
+if (!main.includes('language-selected')) throw new Error('Missing menu language event')
 
 const renderer = fs.readFileSync('src/renderer.js', 'utf8')
 const html = fs.readFileSync('index.html', 'utf8')
+const i18n = fs.readFileSync('src/i18n.js', 'utf8')
 if (html.includes('id="source" spellcheck="false" readonly')) {
   throw new Error('Source editor must stay editable')
 }
+if (html.includes('id="language"')) throw new Error('Language switch belongs in the native menu, not the page toolbar')
+if (!html.includes('id="compare" data-i18n="compare.compare" disabled')) throw new Error('Compare must start disabled before a file is loaded')
+if (!html.includes('id="reader" hidden')) throw new Error('Reader must stay hidden before a file is loaded')
+if (!html.includes('Drag a Markdown file here')) throw new Error('Missing watermark-style empty state copy')
 if (!renderer.includes('openExternal')) throw new Error('Missing external link click handler')
 if (!renderer.includes('scrollToHash')) throw new Error('Missing internal hash link handler')
 if (!renderer.includes("classList.toggle('compare')")) throw new Error('Missing compare view toggle')
+if (!renderer.includes('if (!currentFile) return')) throw new Error('Compare must not toggle before a file is loaded')
+if (!renderer.includes('reader.hidden = false')) throw new Error('Reader must be shown after loading a file')
+if (!renderer.includes('compareButton.disabled = false')) throw new Error('Compare must be enabled after loading a file')
 if (!renderer.includes('pathForFile')) throw new Error('Missing drag/drop file load handler')
 if (!renderer.includes("source.addEventListener('input'")) throw new Error('Missing live source edit preview')
 if (!renderer.includes("event.key.toLowerCase() === 'o'")) throw new Error('Missing keyboard open shortcut')
+if (!renderer.includes('setLanguage')) throw new Error('Missing language switch handler')
+if (!renderer.includes('localStorage')) throw new Error('Missing persisted language preference')
+if (!renderer.includes('onLanguageSelected')) throw new Error('Missing native language menu listener')
+if (!html.includes('data-i18n=')) throw new Error('Missing translatable UI markers')
+if (!i18n.includes('export const languages')) throw new Error('Missing i18n language registry')
+for (const locale of ['en-US', 'zh-CN', 'zh-TW', 'ja-JP', 'ko-KR', 'es-ES', 'fr-FR', 'de-DE', 'pt-BR', 'ru-RU']) {
+  if (!i18n.includes(locale)) throw new Error(`Missing ${locale} locale`)
+}
+if (!i18n.includes('打开 Markdown')) throw new Error('Missing Chinese strings')
+if (!i18n.includes('拖动 Markdown 文件到这里')) throw new Error('Missing Chinese empty-state string')
+if (!i18n.includes('Open Markdown')) throw new Error('Missing English strings')
 for (const plugin of [
   'plugin-breaks',
   'plugin-frontmatter',
@@ -65,5 +90,10 @@ if (styles.includes('grid-template-columns: 0 minmax(0, 1fr)')) {
   throw new Error('Reader mode must not use a zero-width render column')
 }
 if (!styles.includes('.dragging #app::after')) throw new Error('Missing drag/drop overlay styles')
+if (!styles.includes('content: attr(data-drop-label)')) throw new Error('Missing localized drag/drop overlay label')
+if (/^#empty\s*\{[^}]*box-shadow:/m.test(styles)) throw new Error('Empty state must not be a card')
+if (/^#empty\s*\{[^}]*border:/m.test(styles)) throw new Error('Empty state must not have a card border')
+if (!/^#empty\s*\{[^}]*min-height: calc\(100vh - 136px\);/ms.test(styles)) throw new Error('Empty state must be centered like a watermark')
+if (!styles.includes('button:disabled')) throw new Error('Missing disabled button styles')
 
 console.log('smoke ok')

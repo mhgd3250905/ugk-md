@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en-US">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,31 +7,31 @@
     <title>UGK Markdown</title>
   </head>
   <body>
-    <div id="app">
+    <div id="app" data-drop-label="Drop Markdown file">
       <header id="topbar">
         <div class="brand">
           <span class="brand-mark">UGK</span>
-          <span class="brand-name">Markdown Reader</span>
+          <span class="brand-name" data-i18n="app.brand">Markdown Reader</span>
         </div>
         <div id="file-wrap">
-          <span>Current file</span>
-          <strong id="file">No file opened</strong>
+          <span data-i18n="file.caption">Current file</span>
+          <strong id="file" data-i18n="file.empty">No file opened</strong>
         </div>
-        <div id="toolbar" role="toolbar" aria-label="Reader tools">
-          <button id="open" class="primary">Open Markdown</button>
-          <button id="compare">Compare</button>
-          <button id="theme" aria-label="Toggle theme">Dark</button>
+        <div id="toolbar" role="toolbar" aria-label="Reader tools" data-i18n-aria-label="toolbar.label">
+          <button id="open" class="primary" data-i18n="open.button">Open Markdown</button>
+          <button id="compare" data-i18n="compare.compare" disabled>Compare</button>
+          <button id="theme" aria-label="Toggle theme" data-i18n="theme.dark" data-i18n-aria-label="theme.aria">Dark</button>
         </div>
       </header>
       <main>
-        <div id="empty">Open a local .md file to read it.</div>
-        <div id="reader">
+        <div id="empty" data-i18n="empty.message">Drag a Markdown file here</div>
+        <div id="reader" hidden>
           <section id="source-pane">
-            <div class="pane-title">Source Editor</div>
+            <div class="pane-title" data-i18n="source.title">Source Editor</div>
             <textarea id="source" spellcheck="false"></textarea>
           </section>
           <section id="render-pane">
-            <div class="pane-title">Rendered</div>
+            <div class="pane-title" data-i18n="rendered.title">Rendered</div>
             <article id="viewer" class="markdown-body"></article>
           </section>
         </div>
