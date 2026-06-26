@@ -1,6 +1,6 @@
-# UGK Markdown
+# UGK MD阅读器
 
-UGK Markdown is a local Markdown reader for macOS and Windows. It opens local `.md` files, renders rich Markdown with ByteMD plugins, and supports a side-by-side source editor with live preview.
+UGK MD阅读器 is a local Markdown reader for macOS and Windows. It opens local `.md` files, renders rich Markdown with ByteMD plugins, and supports a side-by-side source editor with live preview.
 
 ## Features
 
@@ -9,7 +9,7 @@ UGK Markdown is a local Markdown reader for macOS and Windows. It opens local `.
 - Syntax highlighting, KaTeX math, Mermaid diagrams, image zoom
 - Reader mode and source/preview compare mode
 - Editable source pane with live rendered preview
-- Light and dark themes
+- Light and dark themes, including native window background synchronization
 - Native Language menu with English, Chinese, Japanese, Korean, Spanish, French, German, Portuguese, and Russian UI strings
 - External links open in the system browser
 

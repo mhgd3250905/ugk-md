@@ -7,7 +7,7 @@ import highlight from '@bytemd/plugin-highlight'
 import math from '@bytemd/plugin-math'
 import mediumZoom from '@bytemd/plugin-medium-zoom'
 import mermaid from '@bytemd/plugin-mermaid'
-import { languages, normalizeLanguage, t } from './i18n.js'
+import { appName, languages, normalizeLanguage, t } from './i18n.js'
 import 'bytemd/dist/index.css'
 import 'highlight.js/styles/github.css'
 import 'katex/dist/katex.css'
@@ -40,6 +40,7 @@ let viewer
 
 setLanguage(language)
 window.ugkMarkdown.setLanguage(language)
+window.ugkMarkdown.setTheme(document.body.classList.contains('dark'))
 
 openButton.addEventListener('click', async () => {
   const file = await window.ugkMarkdown.openDialog()
@@ -99,7 +100,7 @@ function show(file) {
   base.href = file.baseUrl
   fileLabel.textContent = file.path
   source.value = file.value
-  document.title = `${file.name} - UGK Markdown`
+  document.title = `${file.name} - ${appName}`
   empty.hidden = true
   compareButton.disabled = false
   viewer.$set({ value: file.value })
@@ -163,8 +164,9 @@ function setLanguage(next) {
 }
 
 function toggleTheme() {
-  document.body.classList.toggle('dark')
-  themeButton.setAttribute('aria-pressed', String(document.body.classList.contains('dark')))
+  const dark = document.body.classList.toggle('dark')
+  window.ugkMarkdown.setTheme(dark)
+  themeButton.setAttribute('aria-pressed', String(dark))
   refreshModeLabels()
 }
 

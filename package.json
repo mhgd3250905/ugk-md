@@ -1,7 +1,7 @@
 {
   "name": "ugk-md",
   "version": "0.1.0",
-  "description": "Local Markdown reader for macOS and Windows.",
+  "description": "UGK MD阅读器 for local Markdown files on macOS and Windows.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
   },
   "build": {
     "appId": "local.ugk.md",
-    "productName": "UGK Markdown",
+    "productName": "UGK MD阅读器",
     "files": [
       "dist/**/*",
       "main.js",

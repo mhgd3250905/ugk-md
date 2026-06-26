@@ -1,8 +1,8 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { defaultLanguage, languages, normalizeLanguage } from './src/i18n.js'
+import { appName, defaultLanguage, languages, normalizeLanguage, t } from './src/i18n.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 let win
@@ -41,7 +41,8 @@ async function createWindow() {
     height: 760,
     minWidth: 760,
     minHeight: 520,
-    title: 'UGK Markdown',
+    title: appName,
+    backgroundColor: '#f7f7f7',
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -99,6 +100,11 @@ ipcMain.handle('set-language', (_event, language) => {
   return currentLanguage
 })
 
+ipcMain.handle('set-theme', (_event, dark) => {
+  nativeTheme.themeSource = dark ? 'dark' : 'light'
+  win?.setBackgroundColor(dark ? '#0b0f16' : '#f7f7f7')
+})
+
 async function openMarkdown(filePath) {
   if (!win) return
   try {
@@ -122,15 +128,15 @@ function createMenu() {
   const template = [
     ...(process.platform === 'darwin' ? [{ role: 'appMenu' }] : []),
     {
-      label: 'File',
+      label: t(currentLanguage, 'menu.file'),
       submenu: [
-        { role: 'close' },
+        { label: t(currentLanguage, 'menu.close'), role: 'close' },
         { type: 'separator' },
-        { role: 'quit' },
+        { label: t(currentLanguage, 'menu.quit'), role: 'quit' },
       ],
     },
     {
-      label: 'Language',
+      label: t(currentLanguage, 'menu.language'),
       submenu: Object.entries(languages).map(([id, language]) => ({
         label: language.label,
         type: 'radio',
@@ -139,14 +145,14 @@ function createMenu() {
       })),
     },
     {
-      label: 'View',
+      label: t(currentLanguage, 'menu.view'),
       submenu: [
-        { role: 'reload' },
-        { role: 'toggleDevTools' },
+        { label: t(currentLanguage, 'menu.reload'), role: 'reload' },
+        { label: t(currentLanguage, 'menu.toggleDevTools'), role: 'toggleDevTools' },
         { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
+        { label: t(currentLanguage, 'menu.resetZoom'), role: 'resetZoom' },
+        { label: t(currentLanguage, 'menu.zoomIn'), role: 'zoomIn' },
+        { label: t(currentLanguage, 'menu.zoomOut'), role: 'zoomOut' },
       ],
     },
   ]

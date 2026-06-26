@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import { t } from './src/i18n.js'
+import { appName, t } from './src/i18n.js'
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const files = ['main.js', 'preload.cjs', 'index.html', 'src/renderer.js', 'src/styles.css', 'src/i18n.js']
@@ -7,6 +7,9 @@ const files = ['main.js', 'preload.cjs', 'index.html', 'src/renderer.js', 'src/s
 for (const file of files) {
   if (!fs.existsSync(file)) throw new Error(`Missing ${file}`)
 }
+
+if (!appName.startsWith('UGK MD')) throw new Error('Unexpected app name')
+if (pkg.build.productName !== appName) throw new Error('Product name must match app name')
 
 const exts = pkg.build.fileAssociations[0].ext
 for (const ext of ['md', 'markdown']) {
@@ -20,13 +23,22 @@ if (!preload.includes('openExternal')) throw new Error('Missing external link br
 if (!preload.includes('pathForFile')) throw new Error('Missing drag/drop file path bridge')
 if (!preload.includes('setLanguage')) throw new Error('Missing language menu bridge')
 if (!preload.includes('onLanguageSelected')) throw new Error('Missing language menu listener')
+if (!preload.includes('setTheme')) throw new Error('Missing native theme bridge')
 
 const main = fs.readFileSync('main.js', 'utf8')
 if (!main.includes('will-navigate')) throw new Error('Missing navigation guard')
 if (!main.includes('Only Markdown files can be opened')) throw new Error('Missing drag/drop read guard')
 if (!main.includes('Menu.buildFromTemplate')) throw new Error('Missing native app menu')
-if (!main.includes("label: 'Language'")) throw new Error('Missing Language menu')
+if (!main.includes("t(currentLanguage, 'menu.file')")) throw new Error('File menu must be localized')
+if (!main.includes("t(currentLanguage, 'menu.language')")) throw new Error('Language menu must be localized')
+if (!main.includes("t(currentLanguage, 'menu.view')")) throw new Error('View menu must be localized')
+if (!main.includes("t(currentLanguage, 'menu.close')")) throw new Error('Close submenu must be localized')
+if (!main.includes("t(currentLanguage, 'menu.quit')")) throw new Error('Quit submenu must be localized')
+if (!main.includes("t(currentLanguage, 'menu.reload')")) throw new Error('Reload submenu must be localized')
 if (!main.includes('language-selected')) throw new Error('Missing menu language event')
+if (!main.includes('title: appName')) throw new Error('Window title must use app name')
+if (!main.includes('nativeTheme.themeSource')) throw new Error('Native theme must follow dark mode')
+if (!main.includes('setBackgroundColor')) throw new Error('Window background must follow dark mode')
 
 const renderer = fs.readFileSync('src/renderer.js', 'utf8')
 const html = fs.readFileSync('index.html', 'utf8')
@@ -34,6 +46,7 @@ const i18n = fs.readFileSync('src/i18n.js', 'utf8')
 if (html.includes('id="source" spellcheck="false" readonly')) {
   throw new Error('Source editor must stay editable')
 }
+if (!html.includes('<title>UGK MD')) throw new Error('HTML title must use app name')
 if (html.includes('id="language"')) throw new Error('Language switch belongs in the native menu, not the page toolbar')
 if (html.includes('id="reader"')) throw new Error('Reader must not exist in the unloaded DOM')
 if (!html.includes('id="reader-template"')) throw new Error('Missing lazy reader template')
@@ -52,11 +65,16 @@ if (!renderer.includes("event.key.toLowerCase() === 'o'")) throw new Error('Miss
 if (!renderer.includes('setLanguage')) throw new Error('Missing language switch handler')
 if (!renderer.includes('localStorage')) throw new Error('Missing persisted language preference')
 if (!renderer.includes('onLanguageSelected')) throw new Error('Missing native language menu listener')
+if (!renderer.includes('setTheme')) throw new Error('Missing native theme sync call')
+if (!renderer.includes('appName')) throw new Error('Document title must use app name')
 if (!html.includes('data-i18n=')) throw new Error('Missing translatable UI markers')
 if (!i18n.includes('export const languages')) throw new Error('Missing i18n language registry')
 for (const locale of ['en-US', 'zh-CN', 'zh-TW', 'ja-JP', 'ko-KR', 'es-ES', 'fr-FR', 'de-DE', 'pt-BR', 'ru-RU']) {
   if (!i18n.includes(locale)) throw new Error(`Missing ${locale} locale`)
 }
+if (t('zh-CN', 'menu.file') === t('en', 'menu.file')) throw new Error('Localized File menu string missing')
+if (t('zh-CN', 'menu.language') === t('en', 'menu.language')) throw new Error('Localized Language menu string missing')
+if (t('zh-CN', 'menu.view') === t('en', 'menu.view')) throw new Error('Localized View menu string missing')
 if (t('zh-CN', 'open.button') === t('en', 'open.button')) throw new Error('Chinese strings must differ from English strings')
 if (t('zh-CN', 'empty.message') === t('en', 'empty.message')) throw new Error('Chinese empty state must differ from English empty state')
 for (const plugin of [

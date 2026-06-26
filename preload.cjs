@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('ugkMarkdown', {
   pathForFile: (file) => webUtils.getPathForFile(file),
   readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
   setLanguage: (language) => ipcRenderer.invoke('set-language', language),
+  setTheme: (dark) => ipcRenderer.invoke('set-theme', dark),
   onFileOpened: (callback) => {
     ipcRenderer.on('file-opened', (_event, payload) => callback(payload))
   },
