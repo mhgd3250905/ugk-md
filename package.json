@@ -1,0 +1,69 @@
+{
+  "name": "ugk-md",
+  "version": "0.1.0",
+  "description": "Local Markdown reader for macOS and Windows.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhgd3250905/ugk-md.git"
+  },
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "app": "electron .",
+    "build": "vite build",
+    "smoke": "node smoke-test.mjs",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:win": "npm run build && electron-builder --win --x64"
+  },
+  "dependencies": {
+    "@bytemd/plugin-breaks": "^1.22.0",
+    "@bytemd/plugin-frontmatter": "^1.22.0",
+    "@bytemd/plugin-gemoji": "^1.22.0",
+    "@bytemd/plugin-gfm": "^1.22.0",
+    "@bytemd/plugin-highlight": "^1.22.0",
+    "@bytemd/plugin-math": "^1.22.0",
+    "@bytemd/plugin-medium-zoom": "^1.22.0",
+    "@bytemd/plugin-mermaid": "^1.22.0",
+    "bytemd": "^1.22.0"
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12",
+    "vite": "^7.0.5"
+  },
+  "build": {
+    "appId": "local.ugk.md",
+    "productName": "UGK Markdown",
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.cjs",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "fileAssociations": [
+      {
+        "ext": [
+          "md",
+          "markdown",
+          "mdown",
+          "mkd"
+        ],
+        "name": "Markdown Document",
+        "description": "Markdown document",
+        "role": "Viewer"
+      }
+    ]
+  }
+}
