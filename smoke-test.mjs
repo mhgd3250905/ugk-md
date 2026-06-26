@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { t } from './src/i18n.js'
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const files = ['main.js', 'preload.cjs', 'index.html', 'src/renderer.js', 'src/styles.css', 'src/i18n.js']
@@ -34,14 +35,16 @@ if (html.includes('id="source" spellcheck="false" readonly')) {
   throw new Error('Source editor must stay editable')
 }
 if (html.includes('id="language"')) throw new Error('Language switch belongs in the native menu, not the page toolbar')
+if (html.includes('id="reader"')) throw new Error('Reader must not exist in the unloaded DOM')
+if (!html.includes('id="reader-template"')) throw new Error('Missing lazy reader template')
 if (!html.includes('id="compare" data-i18n="compare.compare" disabled')) throw new Error('Compare must start disabled before a file is loaded')
-if (!html.includes('id="reader" hidden')) throw new Error('Reader must stay hidden before a file is loaded')
 if (!html.includes('Drag a Markdown file here')) throw new Error('Missing watermark-style empty state copy')
 if (!renderer.includes('openExternal')) throw new Error('Missing external link click handler')
 if (!renderer.includes('scrollToHash')) throw new Error('Missing internal hash link handler')
 if (!renderer.includes("classList.toggle('compare')")) throw new Error('Missing compare view toggle')
 if (!renderer.includes('if (!currentFile) return')) throw new Error('Compare must not toggle before a file is loaded')
-if (!renderer.includes('reader.hidden = false')) throw new Error('Reader must be shown after loading a file')
+if (!renderer.includes('function ensureReader()')) throw new Error('Missing lazy reader creation')
+if (!renderer.includes("reader.id = 'reader'")) throw new Error('Reader must be created only after loading a file')
 if (!renderer.includes('compareButton.disabled = false')) throw new Error('Compare must be enabled after loading a file')
 if (!renderer.includes('pathForFile')) throw new Error('Missing drag/drop file load handler')
 if (!renderer.includes("source.addEventListener('input'")) throw new Error('Missing live source edit preview')
@@ -54,9 +57,8 @@ if (!i18n.includes('export const languages')) throw new Error('Missing i18n lang
 for (const locale of ['en-US', 'zh-CN', 'zh-TW', 'ja-JP', 'ko-KR', 'es-ES', 'fr-FR', 'de-DE', 'pt-BR', 'ru-RU']) {
   if (!i18n.includes(locale)) throw new Error(`Missing ${locale} locale`)
 }
-if (!i18n.includes('打开 Markdown')) throw new Error('Missing Chinese strings')
-if (!i18n.includes('拖动 Markdown 文件到这里')) throw new Error('Missing Chinese empty-state string')
-if (!i18n.includes('Open Markdown')) throw new Error('Missing English strings')
+if (t('zh-CN', 'open.button') === t('en', 'open.button')) throw new Error('Chinese strings must differ from English strings')
+if (t('zh-CN', 'empty.message') === t('en', 'empty.message')) throw new Error('Chinese empty state must differ from English empty state')
 for (const plugin of [
   'plugin-breaks',
   'plugin-frontmatter',

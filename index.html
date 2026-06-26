@@ -25,7 +25,7 @@
       </header>
       <main>
         <div id="empty" data-i18n="empty.message">Drag a Markdown file here</div>
-        <div id="reader" hidden>
+        <template id="reader-template">
           <section id="source-pane">
             <div class="pane-title" data-i18n="source.title">Source Editor</div>
             <textarea id="source" spellcheck="false"></textarea>
@@ -34,7 +34,7 @@
             <div class="pane-title" data-i18n="rendered.title">Rendered</div>
             <article id="viewer" class="markdown-body"></article>
           </section>
-        </div>
+        </template>
       </main>
     </div>
     <script type="module" src="/src/renderer.js"></script>

@@ -24,21 +24,19 @@ const plugins = [
   gemoji(),
 ]
 const app = document.querySelector('#app')
-const viewerTarget = document.querySelector('#viewer')
+const main = document.querySelector('main')
+const readerTemplate = document.querySelector('#reader-template')
 const empty = document.querySelector('#empty')
-const reader = document.querySelector('#reader')
 const fileLabel = document.querySelector('#file')
 const base = document.querySelector('#markdown-base')
-const source = document.querySelector('#source')
 const openButton = document.querySelector('#open')
 const compareButton = document.querySelector('#compare')
 const themeButton = document.querySelector('#theme')
 let currentFile = null
 let language = normalizeLanguage(localStorage.getItem('ugkMarkdownLanguage') || navigator.language)
-const viewer = new Viewer({
-  target: viewerTarget,
-  props: { value: '', plugins },
-})
+let reader
+let source
+let viewer
 
 setLanguage(language)
 window.ugkMarkdown.setLanguage(language)
@@ -51,10 +49,6 @@ openButton.addEventListener('click', async () => {
 themeButton.addEventListener('click', toggleTheme)
 
 compareButton.addEventListener('click', toggleCompare)
-
-source.addEventListener('input', () => {
-  viewer.$set({ value: source.value })
-})
 
 document.addEventListener('keydown', async (event) => {
   const command = event.metaKey || event.ctrlKey
@@ -96,36 +90,58 @@ document.addEventListener('drop', async (event) => {
   show(await window.ugkMarkdown.readFile(filePath))
 })
 
-viewerTarget.addEventListener('click', (event) => {
-  if (!(event.target instanceof Element)) return
-  const link = event.target.closest('a')
-  if (!link) return
-
-  const href = link.getAttribute('href') || ''
-  if (href.startsWith('#')) {
-    event.preventDefault()
-    scrollToHash(href)
-    return
-  }
-
-  if (!/^https?:\/\//i.test(link.href)) return
-  event.preventDefault()
-  window.ugkMarkdown.openExternal(link.href)
-})
-
 window.ugkMarkdown.onFileOpened(show)
 window.ugkMarkdown.onLanguageSelected(setLanguage)
 
 function show(file) {
+  ensureReader()
   currentFile = file
   base.href = file.baseUrl
   fileLabel.textContent = file.path
   source.value = file.value
   document.title = `${file.name} - UGK Markdown`
   empty.hidden = true
-  reader.hidden = false
   compareButton.disabled = false
   viewer.$set({ value: file.value })
+}
+
+function ensureReader() {
+  if (reader) return
+
+  reader = document.createElement('div')
+  reader.id = 'reader'
+  reader.append(readerTemplate.content.cloneNode(true))
+  main.append(reader)
+
+  source = reader.querySelector('#source')
+  const viewerTarget = reader.querySelector('#viewer')
+  viewer = new Viewer({
+    target: viewerTarget,
+    props: { value: '', plugins },
+  })
+
+  source.addEventListener('input', () => {
+    viewer.$set({ value: source.value })
+  })
+
+  viewerTarget.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) return
+    const link = event.target.closest('a')
+    if (!link) return
+
+    const href = link.getAttribute('href') || ''
+    if (href.startsWith('#')) {
+      event.preventDefault()
+      scrollToHash(href)
+      return
+    }
+
+    if (!/^https?:\/\//i.test(link.href)) return
+    event.preventDefault()
+    window.ugkMarkdown.openExternal(link.href)
+  })
+
+  setLanguage(language)
 }
 
 function setLanguage(next) {
