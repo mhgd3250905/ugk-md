@@ -29,6 +29,7 @@ body {
   background: var(--canvas);
   color: var(--ink);
   margin: 0;
+  overflow-x: hidden;
 }
 
 a {
@@ -74,10 +75,13 @@ nav a:hover {
 }
 
 .product-scene {
-  inset: 0;
+  bottom: 0;
+  left: 44%;
   opacity: 0.92;
-  padding: 72px 32px 48px;
+  padding: 72px 32px 48px 0;
   position: absolute;
+  right: 32px;
+  top: 0;
   z-index: 0;
 }
 
@@ -89,6 +93,7 @@ nav a:hover {
   margin-left: auto;
   max-width: 980px;
   overflow: hidden;
+  width: 100%;
 }
 
 .window-bar {
@@ -153,6 +158,7 @@ nav a:hover {
 }
 
 .reader-shell article {
+  min-width: 0;
   padding: 48px 56px;
 }
 
@@ -163,6 +169,7 @@ nav a:hover {
   line-height: 1;
   margin: 0 0 20px;
   max-width: 560px;
+  overflow-wrap: anywhere;
 }
 
 .reader-shell p {
@@ -170,6 +177,7 @@ nav a:hover {
   font-size: 18px;
   line-height: 1.45;
   max-width: 520px;
+  overflow-wrap: anywhere;
 }
 
 .reader-shell blockquote {
@@ -177,6 +185,7 @@ nav a:hover {
   border-left: 4px solid var(--primary);
   margin: 28px 0;
   max-width: 520px;
+  overflow-wrap: anywhere;
   padding: 16px 20px;
 }
 
@@ -195,8 +204,10 @@ nav a:hover {
 
 .hero-copy {
   max-width: 560px;
+  min-width: 0;
   padding-top: 68px;
   position: relative;
+  width: 100%;
   z-index: 2;
 }
 
@@ -228,6 +239,9 @@ h1 {
   font-size: 22px;
   line-height: 1.38;
   margin: 0 0 32px;
+  max-width: 34rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .hero-actions,
@@ -275,7 +289,7 @@ h1 {
 }
 
 .chevron-left {
-  left: -20px;
+  left: -160px;
   top: 120px;
 }
 
@@ -493,14 +507,26 @@ footer a {
   }
 
   .hero {
+    display: flex;
+    flex-direction: column;
     min-height: auto;
     padding-top: 40px;
   }
 
   .product-scene {
+    bottom: auto;
+    left: auto;
     margin-top: 42px;
+    order: 2;
     padding: 0;
     position: relative;
+    right: auto;
+    top: auto;
+  }
+
+  .hero-copy {
+    max-width: calc(100vw - 40px);
+    order: 1;
   }
 
   .window {
@@ -561,11 +587,23 @@ footer a {
   }
 
   .reader-shell article {
-    padding: 28px;
+    max-width: calc(100vw - 40px);
+    padding: 28px 20px;
+  }
+
+  .lead {
+    max-width: calc(100vw - 40px);
+  }
+
+  .lead,
+  .reader-shell h2,
+  .reader-shell p,
+  .reader-shell blockquote {
+    word-break: break-all;
   }
 
   .reader-shell h2 {
-    font-size: 30px;
+    font-size: 26px;
   }
 
   .chevron {
