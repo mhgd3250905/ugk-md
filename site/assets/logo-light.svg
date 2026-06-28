@@ -1,0 +1,12 @@
+<svg width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">UGK MD阅读器 logo</title>
+  <desc id="desc">A document mark with blue angular slashes and UGK MD阅读器 wordmark for light backgrounds.</desc>
+  <rect x="1" y="1" width="46" height="54" rx="12" fill="#ffffff" stroke="#e8e8e8" stroke-width="2"/>
+  <path d="M14 17H30L38 25V43H14V17Z" fill="#f7f7f7"/>
+  <path d="M30 17V25H38" stroke="#c2c2c2" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M17 37L22 28L27 37L32 28L37 37" stroke="#024ad8" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M9 12L16 5H26L19 12H9Z" fill="#024ad8"/>
+  <path d="M26 12L33 5H43L36 12H26Z" fill="#296ef9"/>
+  <text x="60" y="27" fill="#1a1a1a" font-family="Manrope, Inter, Arial, sans-serif" font-size="20" font-weight="700">UGK MD</text>
+  <text x="60" y="45" fill="#636363" font-family="Manrope, Inter, Arial, sans-serif" font-size="14" font-weight="500">阅读器</text>
+</svg>
