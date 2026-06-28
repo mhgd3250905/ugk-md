@@ -1,6 +1,6 @@
 {
   "name": "ugk-md",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "UGK MD阅读器 for local Markdown files on macOS and Windows.",
   "license": "MIT",
   "repository": {
@@ -15,8 +15,8 @@
     "build": "vite build",
     "smoke": "node smoke-test.mjs",
     "site:smoke": "node site-smoke.mjs",
-    "dist:mac": "npm run build && electron-builder --mac",
-    "dist:win": "npm run build && electron-builder --win --x64"
+    "dist:mac": "npm run build && electron-builder --mac --x64 --arm64",
+    "dist:win": "npm run build && electron-builder --win --x64 --arm64"
   },
   "dependencies": {
     "@bytemd/plugin-breaks": "^1.22.0",

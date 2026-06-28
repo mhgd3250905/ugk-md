@@ -29,7 +29,7 @@ npm run dist:mac
 npm run dist:win
 ```
 
-Build outputs are written to `release/` and are intentionally not committed. Publish installers through GitHub Releases instead.
+`dist:mac` builds x64 and arm64 DMG installers. `dist:win` builds x64 and arm64 NSIS `.exe` installers. Build outputs are written to `release/` and are intentionally not committed. Publish installers through GitHub Releases instead.
 
 ## Website
 
