@@ -114,6 +114,8 @@ if (!styles.includes('content: attr(data-drop-label)')) throw new Error('Missing
 if (/^#empty\s*\{[^}]*box-shadow:/m.test(styles)) throw new Error('Empty state must not be a card')
 if (/^#empty\s*\{[^}]*border:/m.test(styles)) throw new Error('Empty state must not have a card border')
 if (!/^#empty\s*\{[^}]*min-height: calc\(100vh - 136px\);/ms.test(styles)) throw new Error('Empty state must be centered like a watermark')
+if (!styles.includes('#empty[hidden]')) throw new Error('Hidden empty state must override #empty display styles')
+if (!/\.compare #compare,\s*\.dark #theme\s*\{[^}]*color: var\(--cloud\);/s.test(styles)) throw new Error('Active button text must invert with the theme')
 if (!styles.includes('button:disabled')) throw new Error('Missing disabled button styles')
 
 console.log('smoke ok')

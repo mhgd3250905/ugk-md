@@ -101,7 +101,7 @@ button:disabled:focus-visible {
 .dark #theme {
   background: var(--ink);
   border-color: var(--ink);
-  color: #ffffff;
+  color: var(--cloud);
 }
 
 #app {
@@ -188,6 +188,10 @@ main {
   letter-spacing: 0;
   min-height: calc(100vh - 136px);
   text-align: center;
+}
+
+#empty[hidden] {
+  display: none;
 }
 
 #reader {
