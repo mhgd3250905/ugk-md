@@ -31,6 +31,21 @@ npm run dist:win
 
 Build outputs are written to `release/` and are intentionally not committed. Publish installers through GitHub Releases instead.
 
+## Website
+
+The product website is a static Cloudflare Pages site in `site/`.
+
+Cloudflare Pages settings:
+
+- Build command: leave empty
+- Build output directory: `site`
+
+Check the website files locally:
+
+```bash
+npm run site:smoke
+```
+
 ## License
 
 MIT

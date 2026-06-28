@@ -14,6 +14,7 @@
     "app": "electron .",
     "build": "vite build",
     "smoke": "node smoke-test.mjs",
+    "site:smoke": "node site-smoke.mjs",
     "dist:mac": "npm run build && electron-builder --mac",
     "dist:win": "npm run build && electron-builder --win --x64"
   },

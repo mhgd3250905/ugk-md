@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="UGK MD阅读器是一款适合 macOS 和 Windows 的本地 Markdown 阅读器，打开文件即可获得清爽排版、源码对照、数学公式、流程图和深浅色体验。"
+    />
+    <meta property="og:title" content="UGK MD阅读器 - 本地 Markdown 阅读器" />
+    <meta property="og:description" content="为普通用户准备的本地 Markdown 阅读器：双击打开、清爽阅读、源码对照、实时预览。" />
+    <meta property="og:type" content="website" />
+    <title>UGK MD阅读器 - 本地 Markdown 阅读器</title>
+    <link rel="icon" href="./assets/mark.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="UGK MD阅读器 首页">
+        <img src="./assets/logo-light.svg" alt="UGK MD阅读器" />
+      </a>
+      <nav aria-label="主导航">
+        <a href="#features">功能</a>
+        <a href="#workflow">使用方式</a>
+        <a href="#download">下载</a>
+        <a href="https://github.com/mhgd3250905/ugk-md">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="chevron chevron-left"></div>
+        <div class="chevron chevron-right"></div>
+        <div class="product-scene" aria-hidden="true">
+          <div class="window">
+            <div class="window-bar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="reader-shell">
+              <aside>
+                <strong>UGK MD</strong>
+                <small>Current file</small>
+                <p>meeting-notes.md</p>
+                <button>Compare</button>
+              </aside>
+              <article>
+                <small>Rendered</small>
+                <h2>把 Markdown 当成文档来读</h2>
+                <p>打开本地文件，自动渲染表格、任务列表、公式和流程图。</p>
+                <blockquote>重要内容保持清晰，引用和代码都有更适合阅读的排版。</blockquote>
+                <div class="fake-table">
+                  <span>功能</span><span>状态</span><span>阅读</span><span>完成</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Local Markdown Reader</p>
+          <h1>UGK MD阅读器</h1>
+          <p class="lead">给日常文档、会议记录、产品说明和知识库准备的本地 Markdown 阅读器。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://github.com/mhgd3250905/ugk-md/releases/latest">下载最新版</a>
+            <a class="button secondary" href="#features">查看功能</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="trust-strip" aria-label="产品特点">
+        <div><strong>本地优先</strong><span>文件留在你的电脑上</span></div>
+        <div><strong>双击打开</strong><span>可设为 .md 默认应用</span></div>
+        <div><strong>阅读友好</strong><span>不是给程序员专用的编辑器</span></div>
+      </section>
+
+      <section id="features" class="section">
+        <div class="section-head">
+          <p class="eyebrow">Features</p>
+          <h2>从打开文件到看懂内容，少一步都不多</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <span class="icon">01</span>
+            <h3>丰富 Markdown 渲染</h3>
+            <p>支持表格、任务列表、删除线、Emoji、Frontmatter、代码高亮、KaTeX 数学公式和 Mermaid 图表。</p>
+          </article>
+          <article>
+            <span class="icon">02</span>
+            <h3>源码对照和实时预览</h3>
+            <p>需要检查原文时切到对照模式，左侧可编辑，右侧即时更新渲染结果。</p>
+          </article>
+          <article>
+            <span class="icon">03</span>
+            <h3>深浅色阅读体验</h3>
+            <p>明亮环境用浅色，夜间或暗色桌面用深色，窗口背景会同步切换。</p>
+          </article>
+          <article>
+            <span class="icon">04</span>
+            <h3>多语言界面</h3>
+            <p>内置中文、英文、日文、韩文、法文、德文、西班牙文、葡萄牙文和俄文界面。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2>适合电脑上的真实阅读动作</h2>
+        </div>
+        <ol>
+          <li><strong>打开文件</strong><span>拖入 Markdown，或双击本地 `.md` 文件。</span></li>
+          <li><strong>安静阅读</strong><span>标题、引用、代码、表格和图片保持清楚的层级。</span></li>
+          <li><strong>需要时对照</strong><span>切到 Compare，边改源码边看右侧预览。</span></li>
+        </ol>
+      </section>
+
+      <section class="dark-band">
+        <div>
+          <img src="./assets/logo-dark.svg" alt="UGK MD阅读器" />
+          <h2>不像 IDE 那么重，也不像预览器那么弱。</h2>
+          <p>UGK MD阅读器把 Markdown 当作普通用户每天会打开的文档来处理：速度快、界面克制、功能完整。</p>
+        </div>
+      </section>
+
+      <section id="download" class="download">
+        <div>
+          <p class="eyebrow">Download</p>
+          <h2>安装后，把它设为 Markdown 默认打开方式</h2>
+          <p>macOS 和 Windows 都可以使用。安装包建议从 GitHub Releases 获取，源码在 GitHub 开源。</p>
+        </div>
+        <div class="download-card">
+          <a class="button primary" href="https://github.com/mhgd3250905/ugk-md/releases/latest">前往下载</a>
+          <a class="button secondary" href="https://github.com/mhgd3250905/ugk-md">查看源码</a>
+          <small>当前版本：0.1.0 · MIT License</small>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <img src="./assets/logo-dark.svg" alt="UGK MD阅读器" />
+      <p>本地 Markdown 阅读器，面向每一个需要打开文档的人。</p>
+      <a href="https://github.com/mhgd3250905/ugk-md">GitHub</a>
+    </footer>
+  </body>
+</html>
