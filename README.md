@@ -2,7 +2,7 @@
 
 [English](#english) | [简体中文](#简体中文)
 
-![Version](https://img.shields.io/badge/version-1.0.1-024ad8)
+![Version](https://img.shields.io/badge/version-1.0.2-024ad8)
 ![License](https://img.shields.io/badge/license-MIT-black)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-024ad8)
 
@@ -12,13 +12,13 @@
 
 ### 下载
 
-最新版： [UGK MD阅读器 1.0.1](https://github.com/mhgd3250905/ugk-md/releases/latest)
+最新版： [UGK MD阅读器 1.0.2](https://github.com/mhgd3250905/ugk-md/releases/latest)
 
 | 系统 | 安装包 |
 | --- | --- |
-| macOS Apple Silicon | [UGK-MD-Reader-1.0.1-mac-arm64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.1-mac-arm64.dmg) |
-| macOS Intel | [UGK-MD-Reader-1.0.1-mac-x64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.1-mac-x64.dmg) |
-| Windows x64 / arm64 | [UGK-MD-Reader-1.0.1-windows-x64-arm64.exe](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.1-windows-x64-arm64.exe) |
+| macOS Apple Silicon | [UGK-MD-Reader-1.0.2-mac-arm64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.2-mac-arm64.dmg) |
+| macOS Intel | [UGK-MD-Reader-1.0.2-mac-x64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.2-mac-x64.dmg) |
+| Windows x64 / arm64 | [UGK-MD-Reader-1.0.2-windows-x64-arm64.exe](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.2-windows-x64-arm64.exe) |
 
 > 当前安装包未进行 Apple Developer ID / Windows EV 代码签名，首次打开可能需要系统安全确认。
 
@@ -75,23 +75,24 @@ npm run site:smoke
 
 ## English
 
-UGK MD Reader is a local Markdown reader for macOS and Windows. It opens local `.md` files and renders them with a clean reading layout, rich Markdown support, source comparison, and live preview.
+UGK MD Reader is a Markdown reader for macOS and Windows. It opens local `.md` files, renders pasted Markdown, lets you start a new draft, and saves Markdown back to disk with a clean reading layout, rich Markdown support, source comparison, and live preview.
 
 ### Download
 
-Latest release: [UGK MD Reader 1.0.1](https://github.com/mhgd3250905/ugk-md/releases/latest)
+Latest release: [UGK MD Reader 1.0.2](https://github.com/mhgd3250905/ugk-md/releases/latest)
 
 | Platform | Installer |
 | --- | --- |
-| macOS Apple Silicon | [UGK-MD-Reader-1.0.1-mac-arm64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.1-mac-arm64.dmg) |
-| macOS Intel | [UGK-MD-Reader-1.0.1-mac-x64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.1-mac-x64.dmg) |
-| Windows x64 / arm64 | [UGK-MD-Reader-1.0.1-windows-x64-arm64.exe](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.1-windows-x64-arm64.exe) |
+| macOS Apple Silicon | [UGK-MD-Reader-1.0.2-mac-arm64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.2-mac-arm64.dmg) |
+| macOS Intel | [UGK-MD-Reader-1.0.2-mac-x64.dmg](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.2-mac-x64.dmg) |
+| Windows x64 / arm64 | [UGK-MD-Reader-1.0.2-windows-x64-arm64.exe](https://github.com/mhgd3250905/ugk-md/releases/latest/download/UGK-MD-Reader-1.0.2-windows-x64-arm64.exe) |
 
 > The current installers are not signed with Apple Developer ID or Windows EV certificates. The operating system may show a security prompt on first launch.
 
 ### Features
 
 - Open local Markdown files with drag-and-drop and file association support.
+- Paste Markdown from the clipboard, start a new draft, and save or save as `.md`.
 - Render GFM tables, task lists, strikethrough, line breaks, emoji, and frontmatter.
 - Render syntax highlighting, KaTeX math, Mermaid diagrams, and zoomable images.
 - Switch between reader mode and side-by-side source / preview mode.
@@ -104,8 +105,9 @@ Latest release: [UGK MD Reader 1.0.1](https://github.com/mhgd3250905/ugk-md/rele
 
 1. Download the installer for your platform.
 2. Open UGK MD Reader.
-3. Drag in a `.md` file, or set UGK MD Reader as the default app for Markdown files.
+3. Drag in a `.md` file, paste Markdown, or start a new draft.
 4. Switch to compare mode when you need to inspect or edit the source text.
+5. Save changes with `Ctrl+S`, or use Save As for drafts and pasted content.
 
 ### Development
 

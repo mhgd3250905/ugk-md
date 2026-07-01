@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, clipboard, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -77,12 +77,7 @@ app.on('activate', () => {
 })
 
 ipcMain.handle('open-dialog', async () => {
-  const result = await dialog.showOpenDialog(win, {
-    properties: ['openFile'],
-    filters: [{ name: 'Markdown', extensions: ['md', 'markdown', 'mdown', 'mkd'] }],
-  })
-  if (result.canceled || !result.filePaths[0]) return null
-  return readMarkdown(result.filePaths[0])
+  return chooseMarkdown()
 })
 
 ipcMain.handle('open-external', (_event, url) => {
@@ -92,6 +87,22 @@ ipcMain.handle('open-external', (_event, url) => {
 ipcMain.handle('read-file', (_event, filePath) => {
   if (!isMarkdownFile(filePath)) throw new Error('Only Markdown files can be opened')
   return readMarkdown(filePath)
+})
+
+ipcMain.handle('read-clipboard', () => clipboard.readText())
+
+ipcMain.handle('save-file', (_event, filePath, value) => {
+  if (!isMarkdownFile(filePath)) throw new Error('Only Markdown files can be saved')
+  return writeMarkdown(filePath, value)
+})
+
+ipcMain.handle('save-file-as', async (_event, value, defaultName) => {
+  const result = await dialog.showSaveDialog(win, {
+    defaultPath: defaultName || 'Untitled Markdown.md',
+    filters: [{ name: 'Markdown', extensions: ['md', 'markdown'] }],
+  })
+  if (result.canceled || !result.filePath) return null
+  return writeMarkdown(ensureMarkdownExtension(result.filePath), value)
 })
 
 ipcMain.handle('set-language', (_event, language) => {
@@ -114,13 +125,37 @@ async function openMarkdown(filePath) {
   }
 }
 
+async function openMarkdownFromDialog() {
+  const file = await chooseMarkdown()
+  if (file) win?.webContents.send('file-opened', file)
+}
+
+async function chooseMarkdown() {
+  const result = await dialog.showOpenDialog(win, {
+    properties: ['openFile'],
+    filters: [{ name: 'Markdown', extensions: ['md', 'markdown', 'mdown', 'mkd'] }],
+  })
+  if (result.canceled || !result.filePaths[0]) return null
+  return readMarkdown(result.filePaths[0])
+}
+
 async function readMarkdown(filePath) {
   const value = await fs.readFile(filePath, 'utf8')
+  return markdownFile(filePath, value)
+}
+
+async function writeMarkdown(filePath, value) {
+  await fs.writeFile(filePath, String(value ?? ''), 'utf8')
+  return markdownFile(filePath, String(value ?? ''))
+}
+
+function markdownFile(filePath, value) {
   return {
     value,
     path: filePath,
     name: path.basename(filePath),
     baseUrl: pathToFileURL(path.dirname(filePath) + path.sep).href,
+    persisted: true,
   }
 }
 
@@ -130,6 +165,12 @@ function createMenu() {
     {
       label: t(currentLanguage, 'menu.file'),
       submenu: [
+        { label: t(currentLanguage, 'menu.new'), accelerator: 'CmdOrCtrl+N', click: () => win?.webContents.send('new-document') },
+        { label: t(currentLanguage, 'menu.open'), accelerator: 'CmdOrCtrl+O', click: openMarkdownFromDialog },
+        { label: t(currentLanguage, 'menu.paste'), click: () => win?.webContents.send('paste-document') },
+        { label: t(currentLanguage, 'menu.save'), accelerator: 'CmdOrCtrl+S', click: () => win?.webContents.send('save-document') },
+        { label: t(currentLanguage, 'menu.saveAs'), accelerator: 'CmdOrCtrl+Shift+S', click: () => win?.webContents.send('save-as-document') },
+        { type: 'separator' },
         { label: t(currentLanguage, 'menu.close'), role: 'close' },
         { type: 'separator' },
         { label: t(currentLanguage, 'menu.quit'), role: 'quit' },
@@ -178,4 +219,8 @@ function openExternalUrl(url) {
 
 function isMarkdownFile(filePath) {
   return /\.(md|markdown|mdown|mkd)$/i.test(filePath)
+}
+
+function ensureMarkdownExtension(filePath) {
+  return isMarkdownFile(filePath) ? filePath : `${filePath}.md`
 }

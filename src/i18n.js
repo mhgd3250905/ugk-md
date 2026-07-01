@@ -4,6 +4,16 @@ export const appName = 'UGK MD阅读器'
 const shared = {
   'app.name': appName,
   'app.brand': appName,
+  'menu.new': 'New',
+  'menu.open': 'Open Markdown',
+  'menu.paste': 'Paste Markdown',
+  'menu.save': 'Save',
+  'menu.saveAs': 'Save As...',
+  'new.button': 'New',
+  'paste.button': 'Paste Markdown',
+  'save.button': 'Save',
+  'draft.name': 'Untitled Markdown',
+  'pasted.name': 'Pasted Markdown',
 }
 
 export const languages = {
@@ -317,6 +327,21 @@ export function normalizeLanguage(language) {
   return Object.keys(languages).find((key) => value.startsWith(key.toLowerCase())) || defaultLanguage
 }
 
+const zhCnOverrides = {
+  'menu.new': '\u65b0\u5efa',
+  'menu.open': '\u6253\u5f00 Markdown',
+  'menu.paste': '\u7c98\u8d34 Markdown',
+  'menu.save': '\u4fdd\u5b58',
+  'menu.saveAs': '\u53e6\u5b58\u4e3a...',
+  'new.button': '\u65b0\u5efa',
+  'paste.button': '\u7c98\u8d34 Markdown',
+  'save.button': '\u4fdd\u5b58',
+  'draft.name': '\u672a\u547d\u540d Markdown',
+  'pasted.name': '\u7c98\u8d34\u7684 Markdown',
+}
+
 export function t(language, key) {
-  return languages[normalizeLanguage(language)].strings[key] ?? languages[defaultLanguage].strings[key] ?? key
+  const normalized = normalizeLanguage(language)
+  if (normalized === 'zh-CN' && key in zhCnOverrides) return zhCnOverrides[key]
+  return languages[normalized].strings[key] ?? languages[defaultLanguage].strings[key] ?? key
 }

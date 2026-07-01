@@ -29,7 +29,10 @@ const readerTemplate = document.querySelector('#reader-template')
 const empty = document.querySelector('#empty')
 const fileLabel = document.querySelector('#file')
 const base = document.querySelector('#markdown-base')
+const newButton = document.querySelector('#new')
 const openButton = document.querySelector('#open')
+const pasteButton = document.querySelector('#paste')
+const saveButton = document.querySelector('#save')
 const compareButton = document.querySelector('#compare')
 const themeButton = document.querySelector('#theme')
 let currentFile = null
@@ -42,10 +45,16 @@ setLanguage(language)
 window.ugkMarkdown.setLanguage(language)
 window.ugkMarkdown.setTheme(document.body.classList.contains('dark'))
 
+newButton.addEventListener('click', newDocument)
+
 openButton.addEventListener('click', async () => {
   const file = await window.ugkMarkdown.openDialog()
   if (file) show(file)
 })
+
+pasteButton.addEventListener('click', pasteDocument)
+
+saveButton.addEventListener('click', saveDocument)
 
 themeButton.addEventListener('click', toggleTheme)
 
@@ -59,6 +68,17 @@ document.addEventListener('keydown', async (event) => {
     event.preventDefault()
     const file = await window.ugkMarkdown.openDialog()
     if (file) show(file)
+  }
+
+  if (event.key.toLowerCase() === 'n') {
+    event.preventDefault()
+    newDocument()
+  }
+
+  if (event.key.toLowerCase() === 's') {
+    event.preventDefault()
+    if (event.shiftKey) saveAsDocument()
+    else saveDocument()
   }
 
   if (event.key.toLowerCase() === 'b') {
@@ -91,7 +111,19 @@ document.addEventListener('drop', async (event) => {
   show(await window.ugkMarkdown.readFile(filePath))
 })
 
+document.addEventListener('paste', (event) => {
+  if (currentFile || document.activeElement === source) return
+  const text = event.clipboardData?.getData('text/plain')
+  if (!text) return
+  event.preventDefault()
+  showDraft(text, t(language, 'pasted.name'))
+})
+
 window.ugkMarkdown.onFileOpened(show)
+window.ugkMarkdown.onNewDocument(newDocument)
+window.ugkMarkdown.onPasteDocument(pasteDocument)
+window.ugkMarkdown.onSaveDocument(saveDocument)
+window.ugkMarkdown.onSaveAsDocument(saveAsDocument)
 window.ugkMarkdown.onLanguageSelected(setLanguage)
 
 function show(file) {
@@ -102,8 +134,56 @@ function show(file) {
   source.value = file.value
   document.title = `${file.name} - ${appName}`
   empty.hidden = true
+  saveButton.disabled = false
   compareButton.disabled = false
   viewer.$set({ value: file.value })
+}
+
+function showDraft(value, name, edit = false) {
+  show({
+    value,
+    path: name,
+    name,
+    baseUrl: './',
+    persisted: false,
+  })
+  if (edit) {
+    document.body.classList.add('compare')
+    compareButton.setAttribute('aria-pressed', 'true')
+    source.focus()
+  }
+  refreshModeLabels()
+}
+
+function newDocument() {
+  showDraft('', t(language, 'draft.name'), true)
+}
+
+async function pasteDocument() {
+  const text = await window.ugkMarkdown.readClipboard()
+  if (text) showDraft(text, t(language, 'pasted.name'))
+}
+
+async function saveDocument() {
+  if (!currentFile) return
+  try {
+    const saved = currentFile.persisted
+      ? await window.ugkMarkdown.saveFile(currentFile.path, source.value)
+      : await window.ugkMarkdown.saveFileAs(source.value, `${currentFile.name}.md`)
+    if (saved) show(saved)
+  } catch (error) {
+    window.alert(error.message)
+  }
+}
+
+async function saveAsDocument() {
+  if (!currentFile) return
+  try {
+    const saved = await window.ugkMarkdown.saveFileAs(source.value, currentFile.name)
+    if (saved) show(saved)
+  } catch (error) {
+    window.alert(error.message)
+  }
 }
 
 function ensureReader() {
@@ -122,6 +202,7 @@ function ensureReader() {
   })
 
   source.addEventListener('input', () => {
+    if (currentFile) currentFile.value = source.value
     viewer.$set({ value: source.value })
   })
 
